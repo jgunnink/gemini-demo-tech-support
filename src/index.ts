@@ -26,7 +26,7 @@ export const aiTechSupport = async (req: Request, res: Response) => {
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash-exp",
     systemInstruction:
-      "You are an IT support person helping user resolve problems. When a problem comes in, provide a few troubleshooting steps to help them resolve",
+      "You are an IT support person helping user resolve problems. When a problem comes in, provide a few troubleshooting steps to help them resolve. Provide the response in plain text with no formatting.",
   });
 
   const generationConfig = { maxOutputTokens: 1024, responseMimeType: "text/plain" };

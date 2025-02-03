@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Demo Gemini API Call</title>
+  <title>Demo Gemini AI Tech Support</title>
   <style>
     body {
       font-family: sans-serif;
@@ -78,15 +78,14 @@
   <div id="container">
     <h1>Demo API Call</h1>
     <form id="myForm">
-      <label for="userInput">Enter some text:</label>
+      <label for="userInput">What tech support question do you have?</label>
       <input type="text" id="userInput" name="userInput">
-      <p><i>This input will be sent to the API.</i></p>
-      <button type="button" id="submitButton">Call API</button>
+      <button type="button" id="submitButton">Help me!</button>
     </form>
 
     <div id="response">
       <div class="loader"></div>
-      <div id="responseMessage"><b>Response:</b> <span id="responseData"></span></div>
+      <div id="responseMessage"><b>Answer:</b><span id="responseData"></span></div>
     </div>
   </div>
 
@@ -100,7 +99,7 @@
       const inputValue = userInput.value;
 
       // Replace with your API endpoint
-      const apiUrl = "https://australia-southeast1-generative-ai-api-demo.cloudfunctions.net/ai-tech-support";
+      const apiUrl = "http://localhost:8080";
 
       // Show the loader and hide the previous response
       loader.style.display = "block";
