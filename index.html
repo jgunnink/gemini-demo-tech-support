@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo Gemini API Call</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    #container {
+      width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    #response {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: #f8f8f8;
+    }
+
+    /* CSS for the loading spinner */
+    .loader {
+      border: 8px solid #f3f3f3;
+      /* Light grey */
+      border-top: 8px solid #3498db;
+      /* Blue */
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 2s linear infinite;
+      display: none;
+      /* Initially hidden */
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <h1>Demo API Call</h1>
+    <form id="myForm">
+      <label for="userInput">Enter some text:</label>
+      <input type="text" id="userInput" name="userInput">
+      <p><i>This input will be sent to the API.</i></p>
+      <button type="button" id="submitButton">Call API</button>
+    </form>
+
+    <div id="response">
+      <div class="loader"></div>
+      <div id="responseMessage"><b>Response:</b> <span id="responseData"></span></div>
+    </div>
+  </div>
+
+  <script>
+    const submitButton = document.getElementById("submitButton");
+    const userInput = document.getElementById("userInput");
+    const responseData = document.getElementById("responseData");
+    const loader = document.querySelector(".loader");
+
+    submitButton.addEventListener("click", () => {
+      const inputValue = userInput.value;
+
+      // Replace with your API endpoint
+      const apiUrl = "https://australia-southeast1-generative-ai-api-demo.cloudfunctions.net/ai-tech-support";
+
+      // Show the loader and hide the previous response
+      loader.style.display = "block";
+      responseData.textContent = "";
+
+      // Make the API call (using fetch)
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: inputValue }) // Send input as JSON
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          console.log("response", response)
+          return response.text(); // Parse the JSON response
+        })
+        .then(data => {
+          const text = data
+          console.log("data", data)
+          responseData.textContent = data;
+        })
+        .catch(error => {
+          console.error("There was a problem with the fetch operation:", error);
+          responseData.textContent = "Error: " + error.message;
+        })
+        .finally(() => {
+          // Hide the loader after the response is received (or error occurs)
+          loader.style.display = "none";;
+        });
+    });
+  </script>
+</body>
+
+</html>
