@@ -1,38 +1,93 @@
 import { expect } from "chai";
-import { helloWorld } from "../src/index";
+import { aiTechSupport } from "../src/index";
 import { Request, Response } from "express";
+import sinon from "sinon";
+import {
+  BatchEmbedContentsRequest,
+  BatchEmbedContentsResponse,
+  CachedContent,
+  ChatSession,
+  EmbedContentRequest,
+  EmbedContentResponse,
+  GenerativeModel,
+  GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
+  Part,
+  SingleRequestOptions,
+} from "@google/generative-ai";
 
 interface testObject {
   args: Partial<Request>;
-  expected: any; // We use any here to allow any kind of test response from the function to be passed in.
+  expected: any;
+  statusCode?: number;
 }
 
-describe("when a message is provided", () => {
-  const tests: testObject[] = [
-    { args: { body: { message: "Hi" } }, expected: { message: "Hi" } },
-    { args: { body: { message: "12" } }, expected: { message: "12" } },
-  ];
+describe("aiTechSupport", () => {
+  let sandbox: sinon.SinonSandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-  tests.forEach(({ args, expected }) => {
-    it(`returns ${args.body.message} when request body is ${JSON.stringify(args.body)}`, () => {
-      const result = helloWorld(args as Request, { send: () => null } as Response);
-      expect(result).to.deep.eq(expected);
+  describe("when a message is not provided", () => {
+    const tests: testObject[] = [
+      { args: { body: { message: "" } }, expected: "No message provided", statusCode: 400 },
+      { args: { body: { message: undefined } }, expected: "No message provided", statusCode: 400 },
+      { args: { body: {} }, expected: "No message provided", statusCode: 400 },
+      { args: { body: { otherKey: "What?" } }, expected: "No message provided", statusCode: 400 },
+    ];
+
+    tests.forEach(({ args, expected, statusCode }) => {
+      it(`returns "${expected}" and status ${statusCode} when request body is ${JSON.stringify(args.body)}`, async () => {
+        const mockRes = {
+          send: sinon.stub(),
+          statusCode: 0,
+        };
+
+        const result = await aiTechSupport(args as Request, mockRes as unknown as Response);
+
+        expect(result).to.deep.equal(expected);
+        expect(mockRes.send.calledWith(expected)).to.be.true;
+        expect(mockRes.statusCode).to.equal(statusCode);
+      });
     });
   });
-});
 
-describe("when a message is not provided", () => {
-  const tests: testObject[] = [
-    { args: { body: { message: "" } }, expected: { message: "Hello World!" } },
-    { args: { body: { message: undefined } }, expected: { message: "Hello World!" } },
-    { args: { body: {} }, expected: { message: "Hello World!" } },
-    { args: { body: { otherKey: "What?" } }, expected: { message: "Hello World!" } },
-  ];
+  describe("when a valid message is provided", () => {
+    const tests: testObject[] = [
+      {
+        args: { body: { message: "My computer is slow" } },
+        expected: "Here are some troubleshooting steps:\n1. ...", // Mock AI response
+      },
+    ];
 
-  tests.forEach(({ args, expected }) => {
-    it(`returns Hello World! when request body is ${JSON.stringify(args.body)}`, () => {
-      const result = helloWorld(args as Request, { send: () => null } as Response);
-      expect(result).to.deep.eq(expected);
+    tests.forEach(({ args, expected }) => {
+      it(`returns AI response "${expected}" when request body is ${JSON.stringify(args.body)}`, async () => {
+        const mockGenerativeModel = {
+          startChat: sandbox.stub().returns({
+            sendMessage: sandbox.stub().resolves({
+              response: {
+                text: () => expected,
+              },
+            }),
+          }),
+        };
+        sandbox.stub(GoogleGenerativeAI.prototype, "getGenerativeModel").returns(mockGenerativeModel as unknown as GenerativeModel);
+
+        const mockRes = {
+          send: sinon.stub(),
+          statusCode: 0,
+        };
+
+        const result = await aiTechSupport(args as Request, mockRes as unknown as Response);
+
+        expect(result).to.deep.equal(expected);
+        expect(mockRes.send.calledWith(expected)).to.be.true;
+        expect(mockRes.statusCode).to.equal(200);
+      });
     });
   });
 });
