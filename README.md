@@ -22,7 +22,7 @@ You can then run something like:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
-    -d '{"message": "Help my printer isn't working."}' \
+    -d '{"message": "Help my printer isnt working."}' \
     http://localhost:8080
 ```
 
