@@ -1,7 +1,7 @@
-# Cloud Functions Typescript Template
+# Gemini Demo Tech Support
 
-This repo is to help get building faster with typescript on Google
-[Cloud Functions](https://cloud.google.com/functions).
+This repo is a demo of using cloud functions with Gemini to build Gen AI apps. It uses [Cloud Functions](https://cloud.google.com/functions)
+as a backend.
 
 It includes:
 
@@ -10,7 +10,7 @@ It includes:
 - Cloudbuild yaml file for easy integration to continuous delivery if required.
 - Github Actions for testing and branch status checks on PR merges.
 
-Requires Node v20 or higher.
+Requires Node v22 or higher.
 
 ## Usage
 
@@ -22,7 +22,7 @@ You can then run something like:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
-    -d '{"message": "Hello my friend"}' \
+    -d '{"message": "Help my printer isn't working."}' \
     http://localhost:8080
 ```
 
