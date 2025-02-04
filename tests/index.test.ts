@@ -45,6 +45,7 @@ describe("aiTechSupport", () => {
         const mockRes = {
           send: sinon.stub(),
           statusCode: 0,
+          setHeader: sinon.stub(),
         };
 
         const result = await aiTechSupport(args as Request, mockRes as unknown as Response);
@@ -80,6 +81,7 @@ describe("aiTechSupport", () => {
         const mockRes = {
           send: sinon.stub(),
           statusCode: 0,
+          setHeader: sinon.stub(),
         };
 
         const result = await aiTechSupport(args as Request, mockRes as unknown as Response);
