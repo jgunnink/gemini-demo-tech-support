@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GenerationConfig, GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const apiKey = process.env.GEMINI_API_KEY;
 
