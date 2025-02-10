@@ -1,8 +1,8 @@
 substitutions:
-  _RUNTIME: nodejs18
-  _SERVICE_NAME: hello-world
+  _RUNTIME: nodejs22
+  _SERVICE_NAME: ai-tech-support
   _REGION: australia-southeast1
-  _ENTRY_POINT: helloWorld
+  _ENTRY_POINT: aiTechSupport
 
 steps:
   - name: node
