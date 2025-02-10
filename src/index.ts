@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GenerationConfig, GoogleGenerativeAI } from "@google/generative-ai";
 
 const apiKey = process.env.GEMINI_API_KEY;
 
@@ -24,19 +24,14 @@ export const aiTechSupport = async (req: Request, res: Response) => {
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp",
+    model: "gemini-2.0-flash",
     systemInstruction:
       "You are an IT support person helping user resolve problems. When a problem comes in, provide a few troubleshooting steps to help them resolve. Provide the response in plain text with no formatting.",
   });
 
-  const generationConfig = { maxOutputTokens: 1024, responseMimeType: "text/plain" };
+  model.generationConfig = { maxOutputTokens: 1024, responseMimeType: "text/plain" };
 
-  const chatSession = model.startChat({
-    generationConfig,
-    history: [],
-  });
-
-  const result = await chatSession.sendMessage(req.body.message);
+  const result = await model.generateContent(req.body.message);
 
   res.statusCode = 200;
   res.send(result.response.text());

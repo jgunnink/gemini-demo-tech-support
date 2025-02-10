@@ -68,12 +68,8 @@ describe("aiTechSupport", () => {
     tests.forEach(({ args, expected }) => {
       it(`returns AI response "${expected}" when request body is ${JSON.stringify(args.body)}`, async () => {
         const mockGenerativeModel = {
-          startChat: sandbox.stub().returns({
-            sendMessage: sandbox.stub().resolves({
-              response: {
-                text: () => expected,
-              },
-            }),
+          generateContent: sandbox.stub().resolves({
+            response: { text: () => expected },
           }),
         };
         sandbox.stub(GoogleGenerativeAI.prototype, "getGenerativeModel").returns(mockGenerativeModel as unknown as GenerativeModel);
