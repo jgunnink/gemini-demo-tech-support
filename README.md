@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This repository was created to demo the simplicity of creating an AI tool with hosting on firebase and a cloud function backend to call the Gemini API. Things change so fast in AI lately that this hasn't been updated, so I am archiving the repo. The code may or may not work, use at your own risk.
+
 # Gemini Demo Tech Support
 
 This repo is a demo of using cloud functions with Gemini to build Gen AI apps. It uses [Cloud Functions](https://cloud.google.com/functions)
